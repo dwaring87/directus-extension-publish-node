@@ -1,10 +1,10 @@
 <template>
-    <private-view title="Update Sites">
+    <private-view title="Build Sites">
         <template #headline>Publish</template>
 
         <template #title-outer:prepend>
             <v-button class="header-icon" rounded disabled icon secondary>
-                <v-icon name="cloud_upload" />
+                <v-icon name="build" />
             </v-button>
         </template>
 
@@ -13,7 +13,7 @@
         </template>
 
         <!-- Loading -->
-        <div style="margin: 25px auto; max-width: 50px" v-if="loading">
+        <div v-if="loading" style="margin: 25px auto; max-width: 50px">
             <v-progress-circular indeterminate />
         </div>
 
@@ -24,38 +24,48 @@
             <v-notice type="info">Go to the Settings page to configure the missing settings.</v-notice>
         </div>
 
+        <!-- No Sites -->
+        <div v-if="!setupMessage && !loading && (!sites || sites.length === 0)" style="margin: 25px 50px; text-align: center">
+            <v-info icon="settings" title="Setup Required" type="warning">No Sites Configured</v-info>
+            <br />
+            <v-notice type="info">Go to the Settings page to add a Gridsome site.</v-notice>
+        </div>
+
         <!-- Build Tools -->
-        <div v-if="!setupMessage && !loading" style="margin: 25px 50px">
-            <p>Publish Tools go here</p>
+        <div v-if="!setupMessage && !loading && sites && sites.length > 0" style="margin: 25px 50px">
+            <p>Build Tools go here</p>
         </div>
     </private-view>
 </template>
 
 <script>
 import Navigation from '../components/navigation.vue';
-import { collectionExists } from '../settings.js';
+import { collectionExists, getSites } from '../settings.js';
 
 /**
  * Perform the Setup steps
  * - Check if the Settings Collection exists
+ * - Get the Sites and their properties
+ * @param {API} api Directus API
+ * @param {Function} callback Callback function(err, sites)
  */
 function setup(api, callback) {
-    
-    // Check if the Settings Collection exists
     collectionExists(api, function(exists) {
         if ( !exists ) {
             return callback("Publish Settings Missing");
         }
-        return callback();
+        getSites(api, function(sites) {
+            return callback(undefined, sites);
+        });
     });
-
 }
 
 export default {
     data: function() {
         return {
             loading: true,
-            setupMessage: undefined
+            setupMessage: undefined,
+            sites: undefined
         }
     },
     components: {
@@ -66,8 +76,9 @@ export default {
         let vm = this;
         let api = this.api;
         
-        setup(api, function(err) {
+        setup(api, function(err, sites) {
             vm.setupMessage = err;
+            vm.sites = sites;
             vm.loading = false;
         });
     }

@@ -43,4 +43,18 @@ function createCollection(api, callback) {
     });
 }
 
-export { collectionExists, createCollection };
+/**
+ * Get the Sites and their properties
+ * @param {API} api Directus API
+ * @param {Function} callback Callback function(sites)
+ */
+function getSites(api, callback) {
+    api.get(`/items/${config.collection.collection}`).then(function(res) {
+        return callback(res.data.data);
+    }).catch(function(err) {
+        console.log(err);
+        return callback();
+    });
+}
+
+export { collectionExists, createCollection, getSites };

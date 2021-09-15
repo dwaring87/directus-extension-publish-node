@@ -1,4 +1,4 @@
-import Update from './routes/update.vue';
+import Build from './routes/build.vue';
 import Settings from './routes/settings.vue';
 
 export default {
@@ -8,11 +8,11 @@ export default {
     routes: [
         {
             path: '',
-            redirect: '/dwaring87-publish-gridsome/update'
+            redirect: '/dwaring87-publish-gridsome/build'
         },
         {
-            path: 'update',
-            component: Update
+            path: 'build',
+            component: Build
         },
         {
             path: 'settings',
