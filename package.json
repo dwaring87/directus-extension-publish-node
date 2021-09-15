@@ -1,5 +1,5 @@
 {
-  "name": "@dwaring87/directus-gridsome-module",
+  "name": "@dwaring87/directus-module-publish-gridsome",
   "version": "1.0.0",
   "description": "A Directus v9 Module for building a Gridsome site from the Directus app",
   "main": "src/index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com:dwaring87/directus-gridsome-module"
+    "url": "github.com:dwaring87/directus-module-publish-gridsome"
   },
   "author": "David Waring <dev@davidwaring.net>",
   "license": "MIT",
