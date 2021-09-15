@@ -19,7 +19,7 @@
 
         <!-- Setup Message -->
         <div v-if="setupMessage && !loading" style="margin: 25px 50px; text-align: center">
-            <v-info icon="error" title="Setup Failed" type="error">{{ setupMessage }}</v-info>
+            <v-info icon="error" title="Setup Failed" type="danger">{{ setupMessage }}</v-info>
             <br />
         </div>
 

@@ -4,7 +4,7 @@ import Settings from './routes/settings.vue';
 export default {
     id: 'dwaring87-publish-gridsome',
     name: 'Publish',
-    icon: 'published_with_changes',
+    icon: 'cloud_upload',
     routes: [
         {
             path: '',

@@ -6,9 +6,11 @@ import config from "../config.json";
  * @param {Function} callback Callback function(exists)
  */
 function collectionExists(api, callback) {
-    console.log("--> COLLECTION EXISTS");
     api.get(`/collections/${config.collection.collection}`).then(function(res) {
         return callback(res.data && res.data.data);
+    }).catch(function(err) {
+        console.log(err);
+        return callback(false);
     });
 }
 
@@ -18,12 +20,26 @@ function collectionExists(api, callback) {
  * @param {Function} callback Callback function(success)
  */
 function createCollection(api, callback) {
-    console.log("--> CREATE COLLECTION");
-    api.post('/collections', config.collection).then(function(res) {
-        if ( res.status !== 200 ) {
-            return callback(false)
+    api.post('/collections', config.collection).then(async function(res) {
+        if ( res.status === 200 ) {
+            let requests = [];
+            for ( let i = 0; i < config.fields.length; i++ ) {
+                requests.push(api.post(`/fields/${config.collection.collection}`, config.fields[i]));
+            }
+            const responses = await Promise.all(requests);
+            for ( let i = 0; i < responses.length; i++ ) {
+                if ( responses[i].status !== 200 ) {
+                    return callback(false);
+                }
+            }
+            return callback(true);
         }
-        return callback(true);
+        else {
+            return callback(false);
+        }
+    }).catch(function(err) {
+        console.log(err);
+        return callback(false);
     });
 }
 

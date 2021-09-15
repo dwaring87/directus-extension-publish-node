@@ -5,5 +5,19 @@
             "hidden": true,
             "note": "Configuration settings for the dwaring87-publish-gridsome module"
         }
-    }
+    },
+    "fields": [
+        {
+            "field": "site",
+            "type": "integer"
+        },
+        {
+            "field": "key",
+            "type": "string"
+        },
+        {
+            "field": "value",
+            "type": "string"
+        }
+    ]
 }
