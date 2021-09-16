@@ -17,70 +17,75 @@
             <v-progress-circular indeterminate />
         </div>
 
-        <!-- Settings Missing -->
-        <div v-if="!loading && !setup" style="margin: 25px 50px; text-align: center">
-            <v-info icon="settings" title="Setup Required" type="warning">Build Settings Missing</v-info>
-            <br />
-            <v-notice type="info">Go to the <strong>&nbsp;&nbsp;<v-icon name="settings"></v-icon>&nbsp;</strong> Settings page to configure the sites to build.</v-notice>
-        </div>
+        <!-- Setup Required -->
+        <Message v-if="!loading && setupMessage" 
+                icon="settings" title="Setup Required" v-bind:subtitle="setupMessage">
+            Go to the <strong>&nbsp;&nbsp;<v-icon name="settings"></v-icon>&nbsp;</strong> Settings page to configure the sites to build.
+        </Message>
 
         <!-- No Sites -->
-        <div v-if="!loading && setup && (!sites || sites.length === 0)" style="margin: 25px 50px; text-align: center">
-            <v-info icon="settings" title="Setup Required" type="warning">No Sites Configured</v-info>
-            <br />
-            <v-notice type="info">Go to the Settings page to add a Gridsome site.</v-notice>
-        </div>
+        <Message v-if="!loading && !setupMessage && sites && sites.length === 0" 
+                icon="settings" title="Setup Required" subtitle="No Sites Configured">
+            Go to the <strong>&nbsp;&nbsp;<v-icon name="settings"></v-icon>&nbsp;</strong> Settings page to add a Gridsome site.
+        </Message>
 
-        <!-- Build Tools -->
-        <div v-if="!loading && setup && sites && sites.length > 0" style="margin: 25px 50px">
-            <p>Build Tools go here</p>
-        </div>
+        <!-- List of Sites -->
+        <Sites v-if="!loading && !setupMessage && sites && sites.length > 0"
+                v-bind:sites="sites" page='build' />
     </private-view>
 </template>
 
 <script>
-import Navigation from '../components/navigation.vue';
-import { collectionExists, getSites } from '../settings.js';
+    import Navigation from '../components/navigation.vue';
+    import Message from '../components/message.vue';
+    import Sites from '../components/sites.vue';
+    import { collectionExists, getSites } from '../settings.js';
 
-/**
- * Perform the Setup steps
- * - Check if the Settings Collection exists
- * - Get the Sites and their properties
- * @param {API} api Directus API
- * @param {Function} callback Callback function(setup, sites)
- */
-function setup(api, callback) {
-    collectionExists(api, function(exists) {
-        if ( !exists ) {
-            return callback(false);
-        }
-        getSites(api, function(sites) {
-            return callback(true, sites);
-        });
-    });
-}
+    export default {
+        data: function() {
+            return {
+                loading: true,
+                setupMessage: undefined,
+                sites: undefined
+            }
+        },
 
-export default {
-    data: function() {
-        return {
-            loading: true,
-            setup: false,
-            sites: undefined
+        components: { Navigation, Message, Sites },
+
+        inject: ['api'],
+
+        methods: {
+            
+            /**
+            * Perform the Setup steps
+            * - Check if the Settings Collection exists
+            * - Get the Sites and their properties
+            * @param {Function} callback Callback function(setupMessage, sites)
+            */
+            setup: function(callback) {
+                let vm = this;
+
+                collectionExists(vm.api, function(exists) {
+                    if ( !exists ) {
+                        return callback("Build Settings Missing");
+                    }
+                    getSites(vm.api, function(sites) {
+                        return callback(!sites ? "Could not get Sites from Settings" : undefined, sites);
+                    });
+                });
+            }
+
+        },
+
+        mounted: function() {
+            let vm = this;
+            let api = this.api;
+            
+            vm.setup(function(setupMessage, sites) {
+                vm.setupMessage = setupMessage;
+                vm.sites = sites;
+                vm.loading = false;
+            });
         }
-    },
-    components: {
-        Navigation
-    },
-    inject: ['api'],
-    mounted: function() {
-        let vm = this;
-        let api = this.api;
-        
-        setup(api, function(setup, sites) {
-            vm.setup = setup;
-            vm.sites = sites;
-            vm.loading = false;
-        });
-    }
-};
+    };
 </script>

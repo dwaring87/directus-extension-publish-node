@@ -11,22 +11,22 @@
 
 
 <script>
-export default {
-    data: function() {
-        return {
-            navItems: [
-                {
-                    to: '/dwaring87-publish-gridsome/build',
-                    icon: 'build',
-                    name: 'Build Sites'
-                },
-                {
-                    to: '/dwaring87-publish-gridsome/settings',
-                    icon: 'settings',
-                    name: 'Settings'
-                }
-            ]
+    export default {
+        data: function() {
+            return {
+                navItems: [
+                    {
+                        to: '/dwaring87-publish-gridsome/build',
+                        icon: 'build',
+                        name: 'Build Sites'
+                    },
+                    {
+                        to: '/dwaring87-publish-gridsome/settings',
+                        icon: 'settings',
+                        name: 'Settings'
+                    }
+                ]
+            }
         }
     }
-}
 </script>

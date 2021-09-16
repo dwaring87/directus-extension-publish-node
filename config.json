@@ -19,5 +19,13 @@
             "field": "value",
             "type": "string"
         }
-    ]
+    ],
+    "keys": {
+        "name": "site-name",
+        "path": "site-path",
+        "command": "site-command",
+        "url": "site-url",
+        "timestamp": "last-published-timestamp",
+        "activity": "last-published-activity"
+    }
 }
