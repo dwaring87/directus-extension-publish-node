@@ -16,9 +16,9 @@ export default {
         return {
             navItems: [
                 {
-                    to: '/dwaring87-publish-gridsome/update',
-                    icon: 'cloud_upload',
-                    name: 'Update'
+                    to: '/dwaring87-publish-gridsome/build',
+                    icon: 'build',
+                    name: 'Build Sites'
                 },
                 {
                     to: '/dwaring87-publish-gridsome/settings',

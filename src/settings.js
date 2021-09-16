@@ -57,4 +57,8 @@ function getSites(api, callback) {
     });
 }
 
-export { collectionExists, createCollection, getSites };
+function saveSite(api, name, path, command, url, callback) {
+    // TODO
+} 
+
+export { collectionExists, createCollection, getSites, saveSite };

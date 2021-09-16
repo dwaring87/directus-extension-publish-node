@@ -17,22 +17,22 @@
             <v-progress-circular indeterminate />
         </div>
 
-        <!-- Setup Message -->
-        <div v-if="setupMessage && !loading" style="margin: 25px 50px; text-align: center">
-            <v-info icon="settings" title="Setup Required" type="warning">{{ setupMessage }}</v-info>
+        <!-- Settings Missing -->
+        <div v-if="!loading && !setup" style="margin: 25px 50px; text-align: center">
+            <v-info icon="settings" title="Setup Required" type="warning">Build Settings Missing</v-info>
             <br />
-            <v-notice type="info">Go to the Settings page to configure the missing settings.</v-notice>
+            <v-notice type="info">Go to the <strong>&nbsp;&nbsp;<v-icon name="settings"></v-icon>&nbsp;</strong> Settings page to configure the sites to build.</v-notice>
         </div>
 
         <!-- No Sites -->
-        <div v-if="!setupMessage && !loading && (!sites || sites.length === 0)" style="margin: 25px 50px; text-align: center">
+        <div v-if="!loading && setup && (!sites || sites.length === 0)" style="margin: 25px 50px; text-align: center">
             <v-info icon="settings" title="Setup Required" type="warning">No Sites Configured</v-info>
             <br />
             <v-notice type="info">Go to the Settings page to add a Gridsome site.</v-notice>
         </div>
 
         <!-- Build Tools -->
-        <div v-if="!setupMessage && !loading && sites && sites.length > 0" style="margin: 25px 50px">
+        <div v-if="!loading && setup && sites && sites.length > 0" style="margin: 25px 50px">
             <p>Build Tools go here</p>
         </div>
     </private-view>
@@ -47,15 +47,15 @@ import { collectionExists, getSites } from '../settings.js';
  * - Check if the Settings Collection exists
  * - Get the Sites and their properties
  * @param {API} api Directus API
- * @param {Function} callback Callback function(err, sites)
+ * @param {Function} callback Callback function(setup, sites)
  */
 function setup(api, callback) {
     collectionExists(api, function(exists) {
         if ( !exists ) {
-            return callback("Publish Settings Missing");
+            return callback(false);
         }
         getSites(api, function(sites) {
-            return callback(undefined, sites);
+            return callback(true, sites);
         });
     });
 }
@@ -64,7 +64,7 @@ export default {
     data: function() {
         return {
             loading: true,
-            setupMessage: undefined,
+            setup: false,
             sites: undefined
         }
     },
@@ -76,8 +76,8 @@ export default {
         let vm = this;
         let api = this.api;
         
-        setup(api, function(err, sites) {
-            vm.setupMessage = err;
+        setup(api, function(setup, sites) {
+            vm.setup = setup;
             vm.sites = sites;
             vm.loading = false;
         });
