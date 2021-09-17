@@ -128,6 +128,35 @@ function saveSite(api, name, path, command, url, callback) {
 }
 
 /**
+ * Remove the specified Site (by site id) from the Settings
+ * @param {API} api Directus API
+ * @param {Integer} site Site ID
+ * @param {Function} callback Callback function(success)
+ */
+function removeSite(api, site, callback) {
+    api.get(`/items/${config.collection.collection}?filter={"site":{"_eq":${site}}}`).then(function(res) {
+        if ( res && res.data && res.data.data && res.data.data.length > 0 ) {
+            let ids = [];
+            for ( let i = 0; i < res.data.data.length; i++ ) {
+                ids.push(res.data.data[i].id)
+            }
+            api.delete(`/items/${config.collection.collection}`, {data: { keys: ids }}).then(function(res) {
+                return callback(res && res.status && res.status === 200);
+            }).catch(function(err) {
+                console.log(err);
+                return callback(false);
+            });
+        }
+        else {
+            return callback(false);
+        }
+    }).catch(function(err) {
+        console.log(err);
+        return callback(false);
+    });
+}
+
+/**
  * Get the ID of the last Activity Item (excluding authenticate)
  * @param {API} api Directus API
  * @param {Function} calback Callback function(activity_id)
@@ -156,4 +185,4 @@ function _getNewSiteId(api, callback) {
     });
 }
 
-export { collectionExists, createCollection, getSites, saveSite, getLastActivityId };
+export { collectionExists, createCollection, getSites, saveSite, removeSite, getLastActivityId };

@@ -35,17 +35,12 @@
 
         <!-- List of Sites -->
         <Sites v-if="!loading && !setupMessage && sites && sites.length > 0"
-                v-bind:sites="sites" page='settings' />
+                v-bind:sites="sites" page='settings' v-on:update="displaySites" v-on:loading="loading = true" />
 
         <!-- Add Site Drawer -->
         <AddSiteDrawer v-bind:show="showAddSiteDrawer" 
                 v-on:close="showAddSiteDrawer = false"
-                v-on:error="displayError"
                 v-on:done="displaySites" />
-
-        <!-- Add Site Error Dialog -->
-        <Dialog v-bind:show="!!dialogMessage" v-bind:title="dialogTitle" v-bind:message="dialogMessage" 
-                v-on:close="dialogMessage = undefined" />
     </private-view>
 </template>
 
@@ -55,24 +50,21 @@
     import Message from '../components/message.vue';
     import Sites from '../components/sites.vue';
     import AddSiteDrawer from '../components/addSiteDrawer.vue';
-    import Dialog from '../components/dialog.vue';
     import { collectionExists, createCollection, getSites } from '../settings.js';
 
     export default {
         inject: ['api'],
+
+        components: { Navigation, Error, Message, Sites, AddSiteDrawer },
         
         data: function() {
             return {
                 loading: true,
                 setupMessage: undefined,
                 sites: undefined,
-                showAddSiteDrawer: false,
-                dialogTitle: undefined,
-                dialogMessage: undefined
+                showAddSiteDrawer: false
             }
         },
-
-        components: { Navigation, Error, Message, Sites, AddSiteDrawer, Dialog },
         
         methods: {
 
@@ -108,28 +100,7 @@
                     if ( !sites ) vm.setupMessage = "Could not get Sites from Settings";
                     vm.sites = sites;
                     vm.loading = false;
-
-                    console.log("SITES: ");
-                    console.log(sites);
                 });
-            },
-
-            /**
-            * Display a Dialog Message
-            * @param {String} title Dialog Title
-            * @param {String} msg Dialog Message
-            */
-            displayDialog: function(title, msg) {
-                this.dialogTitle = title;
-                this.dialogMessage = msg;
-            },
-
-            /**
-            * Display an Error Dialog Message
-            * @param {String} msg Dialog Message
-            */
-            displayError: function(msg) {
-                this.displayDialog('Error', msg);
             }
 
         },

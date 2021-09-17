@@ -6,6 +6,8 @@
     import Message from './message.vue';
 
     export default {
+        components: { Message },
+        
         props: {
             title: {
                 type: String,
@@ -15,8 +17,6 @@
                 type: String,
                 required: true
             }
-        },
-        
-        components: { Message }
+        }
     }
 </script>

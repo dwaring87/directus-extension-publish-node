@@ -45,6 +45,8 @@
     export default {
         inject: ['api'],
 
+        components: { Navigation, Message, Sites },
+
         data: function() {
             return {
                 loading: true,
@@ -53,8 +55,6 @@
                 lastActivityId: undefined
             }
         },
-
-        components: { Navigation, Message, Sites },
 
         methods: {
             

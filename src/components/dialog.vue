@@ -2,9 +2,10 @@
     <v-dialog v-model="show" persistent>
         <v-card>
             <v-card-title>{{ title }}</v-card-title>
-            <v-card-text>{{ message }}</v-card-text>
+            <v-card-text v-html="message"></v-card-text>
             <v-card-actions>
-                <v-button outlined v-on:click="this.$emit('close')">{{ dismissLabel }}</v-button>
+                <v-button outlined v-on:click="this.$emit('close')">{{ close }}</v-button>
+                <v-button v-if="action" v-on:click="this.$emit('action')">{{ action }}</v-button>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -20,9 +21,13 @@
             },
             title: String,
             message: String,
-            dismissLabel: {
+            close: {
                 type: String,
                 default: "Dismiss"
+            },
+            action: {
+                type: String,
+                default: undefined
             }
         }
     }
