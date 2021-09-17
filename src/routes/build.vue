@@ -30,8 +30,9 @@
         </Message>
 
         <!-- List of Sites -->
-        <Sites v-if="!loading && !setupMessage && sites && sites.length > 0"
-                v-bind:sites="sites" page='build' />
+        <div v-if="!loading && !setupMessage && sites && sites.length > 0">
+            <Sites  v-bind:sites="sites" page='build' />
+        </div>
     </private-view>
 </template>
 
@@ -39,20 +40,21 @@
     import Navigation from '../components/navigation.vue';
     import Message from '../components/message.vue';
     import Sites from '../components/sites.vue';
-    import { collectionExists, getSites } from '../settings.js';
+    import { collectionExists, getSites, getLastActivityId } from '../settings.js';
 
     export default {
+        inject: ['api'],
+
         data: function() {
             return {
                 loading: true,
                 setupMessage: undefined,
-                sites: undefined
+                sites: undefined,
+                lastActivityId: undefined
             }
         },
 
         components: { Navigation, Message, Sites },
-
-        inject: ['api'],
 
         methods: {
             
@@ -79,12 +81,15 @@
 
         mounted: function() {
             let vm = this;
-            let api = this.api;
             
             vm.setup(function(setupMessage, sites) {
                 vm.setupMessage = setupMessage;
                 vm.sites = sites;
                 vm.loading = false;
+            });
+
+            getLastActivityId(vm.api, function(lastActivityId) {
+                vm.lastActivityId = lastActivityId;
             });
         }
     };

@@ -47,6 +47,8 @@
     import { saveSite } from '../settings.js';
 
     export default {
+        inject: ['api'],
+
         props: {
             show: {
                 type: Boolean,
@@ -64,8 +66,6 @@
                 saving: false
             }
         },
-
-        inject: ['api'],
 
         methods: {
             

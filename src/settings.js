@@ -1,4 +1,4 @@
-import config from "../config.json";
+import config from "../config.js";
 
 /**
  * Check if the Module Settings Collection exists
@@ -127,18 +127,14 @@ function saveSite(api, name, path, command, url, callback) {
     });
 }
 
-
-
-
-
-
 /**
  * Get the ID of the last Activity Item (excluding authenticate)
  * @param {API} api Directus API
  * @param {Function} calback Callback function(activity_id)
  */
-function _getLastActivityId(api, callback) {
-    api.get('/activity?filter[action][_neq]=authenticate&sort=-timestamp&limit=1').then(function(res) {
+function getLastActivityId(api, callback) {
+    let filter = JSON.stringify(config.activityFilter);
+    api.get(`/activity?filter=${filter}&sort=-timestamp&limit=1`).then(function(res) {
         return callback(res && res.data && res.data.data && res.data.data.length > 0 ? res.data.data[0].id : 0);
     }).catch(function(err) {
         console.log(err);
@@ -160,4 +156,4 @@ function _getNewSiteId(api, callback) {
     });
 }
 
-export { collectionExists, createCollection, getSites, saveSite };
+export { collectionExists, createCollection, getSites, saveSite, getLastActivityId };

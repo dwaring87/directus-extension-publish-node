@@ -59,6 +59,8 @@
     import { collectionExists, createCollection, getSites } from '../settings.js';
 
     export default {
+        inject: ['api'],
+        
         data: function() {
             return {
                 loading: true,
@@ -71,8 +73,6 @@
         },
 
         components: { Navigation, Error, Message, Sites, AddSiteDrawer, Dialog },
-        
-        inject: ['api'],
         
         methods: {
 

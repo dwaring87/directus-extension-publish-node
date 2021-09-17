@@ -5,7 +5,8 @@
         <v-card-text>
             <p v-if="settings"><strong>Path:</strong> <code>{{ site[config.keys.path] }}</code></p>
             <p v-if="settings"><strong>Build Command:</strong> <code>{{ site[config.keys.command] }}</code></p>
-            <p><strong>Last Updated:</strong> {{ site[config.keys.timestamp] ? site[config.keys.timestamp] : 'Never' }}</p>
+            <p><strong>Last Updated:</strong> {{ site[config.keys.timestamp] ? site[config.keys.timestamp] : 'Unknown' }}</p>
+            <p><strong>Update?</strong> {{ siteUpdateAvailable(site) }}</p>
         </v-card-text>
         <v-card-actions>
             <v-button v-bind:href="site[config.keys.url]"><v-icon name="launch"></v-icon>&nbsp;View</v-button>
@@ -16,9 +17,12 @@
 </template>
 
 <script>
-    import config from "../../config.json";
+    import config from "../../config.js";
+    import { getLastActivityId } from '../settings.js';
 
     export default {
+        inject: ['api'],
+
         props: {
             sites: {
                 type: Array,
@@ -29,7 +33,8 @@
 
         data: function() {
             return {
-                config: config
+                config: config,
+                lastActivityId: undefined
             }
         },
         
@@ -40,6 +45,19 @@
             settings: function() {
                 return this.page === 'settings';
             }
+        },
+
+        methods: {
+            siteUpdateAvailable: function(site) {
+                return this.lastActivityId && (parseInt(this.lastActivityId) > parseInt(site[this.config.keys.activity]));
+            }
+        },
+
+        mounted: function() {
+            let vm = this;
+            getLastActivityId(vm.api, function(lastActivityId) {
+                vm.lastActivityId = lastActivityId;
+            });
         }
     }
 </script>
