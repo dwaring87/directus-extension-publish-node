@@ -15,7 +15,7 @@
 
                 <div class="input-row">
                     <div class="type-label">
-                        Gridsome Path
+                        Local Path to Site
                         <v-icon tooltip="Required" class="required" name="star" sup />    
                     </div>
                     <v-input v-model="path" placeholder="/gridsome"></v-input>
@@ -92,13 +92,13 @@
                     return vm.displayError("Site Name is required");
                 }
                 if ( !vm.path || vm.path === "" ) {
-                    return vm.displayError("Local path to Gridsome site is required");
+                    return vm.displayError("Local path to Site is required");
                 }
                 if ( !vm.command || vm.command === "" ) {
-                    return vm.displayError("Gridsome build command is required");
+                    return vm.displayError("Site build command is required");
                 }
                 if ( !vm.url || vm.url === "" ) {
-                    return vm.displayError("URL of Gridsome site is required");
+                    return vm.displayError("URL of site is required");
                 }
 
                 vm.saving = true;

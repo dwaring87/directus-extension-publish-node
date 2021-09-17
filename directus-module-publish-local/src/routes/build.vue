@@ -26,7 +26,7 @@
         <!-- No Sites -->
         <Message v-if="!loading && !setupMessage && sites && sites.length === 0" 
                 icon="settings" title="Setup Required" subtitle="No Sites Configured">
-            Go to the <strong>&nbsp;&nbsp;<v-icon name="settings"></v-icon>&nbsp;</strong> Settings page to add a Gridsome site.
+            Go to the <strong>&nbsp;&nbsp;<v-icon name="settings"></v-icon>&nbsp;</strong> Settings page to add a site.
         </Message>
 
         <!-- List of Sites -->

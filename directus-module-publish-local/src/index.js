@@ -2,13 +2,13 @@ import Build from './routes/build.vue';
 import Settings from './routes/settings.vue';
 
 export default {
-    id: 'dwaring87-publish-gridsome',
+    id: 'dwaring87-publish-local',
     name: 'Publish',
     icon: 'cloud_upload',
     routes: [
         {
             path: '',
-            redirect: '/dwaring87-publish-gridsome/build'
+            redirect: '/dwaring87-publish-local/build'
         },
         {
             path: 'build',

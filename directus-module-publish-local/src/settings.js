@@ -1,4 +1,4 @@
-import config from "../config.js";
+import config from "../../config.js";
 
 /**
  * Check if the Module Settings Collection exists
@@ -56,7 +56,8 @@ function getSites(api, callback) {
             for ( let i = 0; i < res.data.data.length; i++ ) {
                 let s = res.data.data[i];
                 let k = "site_" + s.site;
-                let o = so[k] ? so[k] : {'site-id': s.site};
+                let o = so[k] ? so[k] : {};
+                o[config.keys.id] = s.site;
                 o[s.key] = s.value;
                 so[k] = o;
             }

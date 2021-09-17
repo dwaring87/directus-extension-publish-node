@@ -16,12 +16,12 @@
             return {
                 navItems: [
                     {
-                        to: '/dwaring87-publish-gridsome/build',
+                        to: '/dwaring87-publish-local/build',
                         icon: 'build',
                         name: 'Build Sites'
                     },
                     {
-                        to: '/dwaring87-publish-gridsome/settings',
+                        to: '/dwaring87-publish-local/settings',
                         icon: 'settings',
                         name: 'Settings'
                     }

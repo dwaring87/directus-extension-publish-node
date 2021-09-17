@@ -9,7 +9,7 @@
         </template>
 
         <template #actions>
-            <v-button  @click="showAddSiteDrawer = true" tooltip.bottom="Add Gridsome Site" rounded icon>
+            <v-button  @click="showAddSiteDrawer = true" tooltip.bottom="Add Site" rounded icon>
                 <v-icon name="add" />
             </v-button>
 		</template>
@@ -29,8 +29,8 @@
 
         <!-- No Sites -->
         <Message v-if="!loading && !setupMessage && (!sites || sites.length === 0)" 
-                icon="add" title="Add Gridsome Site" subtitle="No Sites Configured">
-            Click the <strong>&nbsp;&nbsp;<v-icon class="btn-color" name="add_circle"></v-icon>&nbsp;</strong> Add button above to add a site.
+                icon="add" title="Add Site" subtitle="No Sites Configured">
+            Click the <strong>&nbsp;&nbsp;<v-icon class="btn-color" name="add_circle"></v-icon>&nbsp;</strong> Add button above to add a Site.
         </Message>
 
         <!-- List of Sites -->

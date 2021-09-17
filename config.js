@@ -1,11 +1,11 @@
-const collection_name = "dwaring87_publish_gridsome";
+const collection_name = "dwaring87_publish_local";
 
 export default {
     "collection": {
         "collection": collection_name,
         "meta": {
             "hidden": true,
-            "note": "Configuration settings for the dwaring87-publish-gridsome module"
+            "note": "Configuration settings for the dwaring87-publish-local extension"
         }
     },
     "fields": [
@@ -23,6 +23,7 @@ export default {
         }
     ],
     "keys": {
+        "id": "site-id",
         "name": "site-name",
         "path": "site-path",
         "command": "site-command",
