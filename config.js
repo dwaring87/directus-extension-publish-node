@@ -28,8 +28,10 @@ export default {
         "path": "site-path",
         "command": "site-command",
         "url": "site-url",
-        "timestamp": "last-published-timestamp",
-        "activity": "last-published-activity"
+        "status": "build-status",
+        "log": "build-log",
+        "timestamp": "build-timestamp",
+        "activity": "build-activity"
     },
     "activityFilter": {
         "action": {

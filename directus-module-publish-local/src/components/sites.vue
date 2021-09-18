@@ -16,11 +16,13 @@
             
             <v-card-text>
                 <p v-if="settings"><strong>Path:</strong> <code>{{ site[config.keys.path] }}</code></p>
-                <p v-if="settings"><strong>Build Command:</strong> <code>{{ site[config.keys.command] }}</code></p>
+                <p v-if="settings"><strong>Build Command:</strong> <code>npm run {{ site[config.keys.command] }}</code></p>
+                <p><strong>Status:</strong> {{ site[config.keys.status] ? site[config.keys.status] : 'Unknown' }}</p>
                 <p><strong>Last Updated:</strong> {{ site[config.keys.timestamp] ? site[config.keys.timestamp] : 'Unknown' }}</p>
             </v-card-text>
             
             <v-card-actions>
+                <v-button v-if="build && site[config.keys.log]"><v-icon name="text_snippet"></v-icon>&nbsp;Log</v-button>
                 <v-button v-if="build" v-bind:href="site[config.keys.url]"><v-icon name="launch"></v-icon>&nbsp;View</v-button>
                 <v-button v-if="build"><v-icon name="build"></v-icon>&nbsp;Build</v-button>
                 <v-button v-if="settings" v-on:click="promptDeleteSite(site)" class="danger"><v-icon name="delete"></v-icon>&nbsp;Delete</v-button>

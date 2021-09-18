@@ -90,6 +90,11 @@ function saveSite(api, name, path, command, url, callback) {
         let properties = [
             {
                 "site": site_id,
+                "key": config.keys.id,
+                "value": site_id
+            },
+            {
+                "site": site_id,
                 "key": config.keys.name,
                 "value": name
             },
@@ -110,8 +115,18 @@ function saveSite(api, name, path, command, url, callback) {
             },
             {
                 "site": site_id,
-                "key": config.keys.timestamp,
+                "key": config.keys.status,
+                "value": "Created - Not Published"
+            },
+            {
+                "site": site_id,
+                "key": config.keys.log,
                 "value": undefined
+            },
+            {
+                "site": site_id,
+                "key": config.keys.timestamp,
+                "value": new Date().toLocaleString()
             },
             {
                 "site": site_id,

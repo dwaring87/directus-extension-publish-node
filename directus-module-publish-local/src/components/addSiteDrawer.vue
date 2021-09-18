@@ -26,7 +26,7 @@
                         Build Command
                         <v-icon tooltip="Required" class="required" name="star" sup />
                     </div>
-                    <v-input v-model="command" placeholder="npx gridsome build"></v-input>
+                    <v-input v-model="command" placeholder="build"><template v-slot:prepend>npm run </template></v-input>
                 </div>
 
                 <div class="input-row">
