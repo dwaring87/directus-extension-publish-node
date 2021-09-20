@@ -3,7 +3,7 @@ const config = require('./config.js');
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const spawn = require('child_process').spawn;
+const { exec } = require('child_process');
 
 module.exports = function registerEndpoint(router, { database }) {
 
@@ -36,14 +36,27 @@ module.exports = function registerEndpoint(router, { database }) {
         let command = site[config.keys.command];
         console.log(path + " / " + command);
         console.log(logFile);
-        let out = fs.openSync(logFile, 'a');
-        let err = fs.openSync(logFile, 'a');
-        spawn('npm', ['run', '--prefix ' + path, '"' + command + "'"], {
-            stdio: [ 'ignore', out, err ],
-            detached: true
-        }).unref();
 
-        res.send(site);
+        let logStream = fs.createWriteStream(logFile);
+        var child = exec("npm run --prefix \"" + path + "\" \"" + command + "\"");
+        child.stdout.pipe(logStream);
+        child.stderr.pipe(logStream);
+        child.on('exit', async function(code) {
+            if ( code === 0 ) {
+                let finish_update_success = await _updateStatus(site, "Published");
+                if ( !finish_update_success ) {
+                    return res.send({error: "Could not update Site status to Published in Settings"});
+                }
+                return res.send({success: "Site successfully published"});
+            }
+            else {
+                let finish_update_success = await _updateStatus(site, "Build Failed");
+                if ( !finish_update_success ) {
+                    return res.send({error: "Could not update Site status to Build Failed in Settings"});
+                }
+                return res.send({error: "The Build process failed - view log for details"});
+            }
+        });
     });
 
 
@@ -96,11 +109,12 @@ module.exports = function registerEndpoint(router, { database }) {
     /**
      * Create a temp file for the build log
      * @param {Site} site Site Info object
+     * @returns {String} Path to log file
      */
     async function _makeLogFile(site) {
         try {
             let tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), config.extension + "-"));
-            let logFile = path.join(tmpDir, "site-" + site[config.keys.id]);
+            let logFile = path.join(tmpDir, "site-" + site[config.keys.id] + ".log");
             let count = await database(config.collection.collection)
                 .update('value', logFile)
                 .where('site', parseInt(site[config.keys.id]))
