@@ -11,17 +11,18 @@
 
 
 <script>
+    import config from '../../../config.js';
     export default {
         data: function() {
             return {
                 navItems: [
                     {
-                        to: '/dwaring87-publish-local/build',
+                        to: '/' + config.extension + '/build',
                         icon: 'build',
                         name: 'Build Sites'
                     },
                     {
-                        to: '/dwaring87-publish-local/settings',
+                        to: '/' + config.extension + '/settings',
                         icon: 'settings',
                         name: 'Settings'
                     }

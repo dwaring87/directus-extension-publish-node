@@ -1,11 +1,13 @@
+const extension_name = "dwaring87-publish-local";
 const collection_name = "dwaring87_publish_local";
 
-export default {
+module.exports = {
+    "extension": extension_name,
     "collection": {
         "collection": collection_name,
         "meta": {
             "hidden": true,
-            "note": "Configuration settings for the dwaring87-publish-local extension"
+            "note": "Configuration settings for the " + extension_name + " extension"
         }
     },
     "fields": [
