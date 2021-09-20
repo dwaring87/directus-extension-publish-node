@@ -4,7 +4,7 @@
             <v-card-title>{{ title }}</v-card-title>
             <v-card-text v-html="message"></v-card-text>
             <v-card-actions>
-                <v-button outlined v-on:click="this.$emit('close')">{{ close }}</v-button>
+                <v-button outlined v-if="close" v-on:click="this.$emit('close')">{{ close }}</v-button>
                 <v-button v-if="action" v-on:click="this.$emit('action')">{{ action }}</v-button>
             </v-card-actions>
         </v-card>
@@ -23,7 +23,7 @@
             message: String,
             close: {
                 type: String,
-                default: "Dismiss"
+                default: undefined,
             },
             action: {
                 type: String,

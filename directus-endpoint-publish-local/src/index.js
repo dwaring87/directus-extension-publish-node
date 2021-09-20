@@ -8,7 +8,11 @@ const { exec } = require('child_process');
 module.exports = function registerEndpoint(router, { database }) {
 
     /**
-     * Build
+     * Build the specified Site
+     * - Create Temp File for Log
+     * - Update Status to Building...
+     * - Run the Build Command, saving output to Log
+     * - Return an error or success message
      */
     router.get('/build/:site', async function(req, res) {
         
@@ -25,17 +29,14 @@ module.exports = function registerEndpoint(router, { database }) {
         }
 
         // Update Status
-        let start_update_success = await _updateStatus(site, "Building");
+        let start_update_success = await _updateStatus(site, config.statuses.started);
         if ( !start_update_success ) {
             return res.send({error: "Could not update Site status to Building in Settings"});
         }
 
         // Run Build Command
-        console.log("STARTING BUILD");
         let path = site[config.keys.path];
         let command = site[config.keys.command];
-        console.log(path + " / " + command);
-        console.log(logFile);
 
         let logStream = fs.createWriteStream(logFile);
         var child = exec("npm run --prefix \"" + path + "\" \"" + command + "\"");
@@ -43,20 +44,48 @@ module.exports = function registerEndpoint(router, { database }) {
         child.stderr.pipe(logStream);
         child.on('exit', async function(code) {
             if ( code === 0 ) {
-                let finish_update_success = await _updateStatus(site, "Published");
+                let finish_update_success = await _updateStatus(site, config.statuses.completed);
                 if ( !finish_update_success ) {
                     return res.send({error: "Could not update Site status to Published in Settings"});
                 }
                 return res.send({success: "Site successfully published"});
             }
             else {
-                let finish_update_success = await _updateStatus(site, "Build Failed");
+                let finish_update_success = await _updateStatus(site, config.statuses.failed);
                 if ( !finish_update_success ) {
                     return res.send({error: "Could not update Site status to Build Failed in Settings"});
                 }
                 return res.send({error: "The Build process failed - view log for details"});
             }
         });
+
+    });
+
+    /**
+     * Get the status, timestamp, and log contents of the specified Site
+     */
+    router.get('/status/:site', async function(req, res) {
+
+        // Lookup Site Info from DB
+        let site = await _getSiteInfo(req.params.site);
+        if ( !site ) {
+            return res.send({error: "Site configuration not found in Settings"});
+        }
+
+        // Read Log File
+        let logContents;
+        try {
+            logContents = fs.readFileSync(site[config.keys.log], 'utf8');
+        } catch (err) {
+            console.error(err);
+        }
+
+        res.send({
+            status: site[config.keys.status],
+            timestamp: site[config.keys.timestamp],
+            log: logContents
+        });
+
     });
 
 

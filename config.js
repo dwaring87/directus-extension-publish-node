@@ -35,6 +35,12 @@ module.exports = {
         "timestamp": "build-timestamp",
         "activity": "build-activity"
     },
+    "statuses": {
+        "created": "Created - Not Published",
+        "started": "Building...",
+        "failed": "Build Failed - See Log for details",
+        "completed": "Published"
+    },
     "activityFilter": {
         "action": {
             "_neq": "authenticate"

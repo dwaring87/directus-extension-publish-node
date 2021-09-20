@@ -30,9 +30,8 @@
         </Message>
 
         <!-- List of Sites -->
-        <div v-if="!loading && !setupMessage && sites && sites.length > 0">
-            <Sites  v-bind:sites="sites" page='build' />
-        </div>
+        <Sites v-if="!loading && !setupMessage && sites && sites.length > 0" page='build'
+            v-bind:sites="sites" v-on:update="displaySites" />
     </private-view>
 </template>
 
@@ -61,19 +60,25 @@
             /**
             * Perform the Setup steps
             * - Check if the Settings Collection exists
-            * - Get the Sites and their properties
-            * @param {Function} callback Callback function(setupMessage, sites)
+            * @param {Function} callback Callback function(setupMessage)
             */
             setup: function(callback) {
                 let vm = this;
-
                 collectionExists(vm.api, function(exists) {
-                    if ( !exists ) {
-                        return callback("Build Settings Missing");
-                    }
-                    getSites(vm.api, function(sites) {
-                        return callback(!sites ? "Could not get Sites from Settings" : undefined, sites);
-                    });
+                    return callback(!exists ? "Build Settings Missing" : undefined);
+                });
+            },
+
+            /**
+            * Get the Sites and their properties to be displayed
+            */
+            displaySites: function() {
+                let vm = this;
+                if ( !vm.sites ) vm.loading = true;
+                getSites(vm.api, function(sites) {
+                    if ( !sites ) vm.setupMessage = "Could not get Sites from Settings";
+                    vm.sites = sites;
+                    vm.loading = false;
                 });
             }
 
@@ -82,10 +87,9 @@
         mounted: function() {
             let vm = this;
             
-            vm.setup(function(setupMessage, sites) {
+            vm.setup(function(setupMessage) {
                 vm.setupMessage = setupMessage;
-                vm.sites = sites;
-                vm.loading = false;
+                vm.displaySites();
             });
 
             getLastActivityId(vm.api, function(lastActivityId) {

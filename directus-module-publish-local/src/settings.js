@@ -116,7 +116,7 @@ function saveSite(api, name, path, command, url, callback) {
             {
                 "site": site_id,
                 "key": config.keys.status,
-                "value": "Created - Not Published"
+                "value": config.statuses.created
             },
             {
                 "site": site_id,
@@ -173,6 +173,30 @@ function removeSite(api, site, callback) {
 }
 
 /**
+ * Start the Build process for the specified Site
+ * @param {API} api Directus API
+ * @param {Integer} site Site ID
+ * @param {Function} callback Callback function(resp)
+ */
+function buildSite(api, site, callback) {
+    api.get(`/${config.extension}/build/${site}`).then(function(res) {
+        return callback(res && res.data ? res.data : {error: 'Server error - API endpoint did not return known response'});
+    });
+}
+
+/**
+ * Get the Site status and log contents
+ * @param {API} api Directus API
+ * @param {Site} site Site ID
+ * @param {Function} callback Callback function(resp)
+ */
+function getSiteStatus(api, site, callback) {
+    api.get(`/${config.extension}/status/${site}`).then(function(res) {
+        return callback(res && res.data ? res.data : {error: 'Server error - API endpoint did not return known response'});
+    });
+}
+
+/**
  * Get the ID of the last Activity Item (excluding authenticate)
  * @param {API} api Directus API
  * @param {Function} calback Callback function(activity_id)
@@ -201,4 +225,4 @@ function _getNewSiteId(api, callback) {
     });
 }
 
-export { collectionExists, createCollection, getSites, saveSite, removeSite, getLastActivityId };
+export { collectionExists, createCollection, getSites, saveSite, removeSite, buildSite, getSiteStatus, getLastActivityId };

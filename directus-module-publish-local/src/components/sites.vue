@@ -4,12 +4,15 @@
         <!-- List of Site Cards -->
         <v-card class="site-card" v-if="lastActivityId" v-for="site in sites" v-bind:key="site[config.keys.id]">
             
-            <div v-if="build && lastActivityId && siteUpdateAvailable(site)" class="site-card-update site-card-update-available">
+            <div v-if="build && !siteIsBuilding(site) && lastActivityId && siteUpdateAvailable(site)" class="site-card-update site-card-update-available">
                 <p><v-icon name="update"></v-icon>&nbsp;&nbsp;Updates Available</p>
             </div>
-            <div v-if="build && lastActivityId && !siteUpdateAvailable(site)" class="site-card-update site-card-update-none">
+            <div v-if="build && !siteIsBuilding(site) && lastActivityId && !siteUpdateAvailable(site)" class="site-card-update site-card-update-none">
                 <p><v-icon name="check_circle"></v-icon>&nbsp;&nbsp;Site Updated</p>
             </div>
+            <div v-if="build && siteIsBuilding(site)" class="site-card-update site-card-update-building">
+                <p><v-icon name="build"></v-icon>&nbsp;&nbsp;Building<v-progress-circular indeterminate /></p>
+            </div> 
 
             <v-card-title>{{ site[config.keys.name] }}<span v-if="settings" class="id-badge">#{{ site[config.keys.id] }}</span></v-card-title>
             <v-card-subtitle>{{ site[config.keys.url] }}</v-card-subtitle>
@@ -22,18 +25,29 @@
             </v-card-text>
             
             <v-card-actions>
-                <v-button v-if="build && site[config.keys.log]"><v-icon name="text_snippet"></v-icon>&nbsp;Log</v-button>
-                <v-button v-if="build" v-bind:href="site[config.keys.url]"><v-icon name="launch"></v-icon>&nbsp;View</v-button>
-                <v-button v-if="build"><v-icon name="build"></v-icon>&nbsp;Build</v-button>
-                <v-button v-if="settings" v-on:click="promptDeleteSite(site)" class="danger"><v-icon name="delete"></v-icon>&nbsp;Delete</v-button>
+                <v-button v-if="build" v-bind:href="site[config.keys.url]">
+                    <v-icon name="launch"></v-icon>&nbsp;View
+                </v-button>
+                <v-button v-if="build && site[config.keys.log]" v-on:click="displayLog(site)">
+                    <v-icon name="text_snippet"></v-icon>&nbsp;Log
+                </v-button>
+                <v-button v-if="build" v-on:click="startBuild(site)" v-bind:disabled="siteIsBuilding(site)">
+                    <v-icon name="build"></v-icon>&nbsp;Build
+                </v-button>
+                <v-button v-if="settings" v-on:click="promptDeleteSite(site)" class="danger">
+                    <v-icon name="delete"></v-icon>&nbsp;Delete
+                </v-button>
             </v-card-actions>
             
         </v-card>
 
-        <!-- Confirmation Dialog -->
+        <!-- Confirmation / Error Dialog -->
         <Dialog v-bind:show="!!dialog" v-bind:title="dialog ? dialog.title : undefined" v-bind:message="dialog ? dialog.message : undefined" 
                 v-bind:close="dialog ? dialog.close : undefined" v-on:close="dialog = undefined" 
                 v-bind:action="dialog ? dialog.action : undefined" v-on:action="function() { dialog ? dialog.onAction() : undefined }" />
+
+        <!-- Log Dialog -->
+        <Log v-bind:site="log" v-on:close="onLogClose" />
 
     </div>
 </template>
@@ -41,12 +55,13 @@
 <script>
     import config from '../../../config.js';
     import Dialog from './dialog.vue';
-    import { removeSite, getLastActivityId } from '../settings.js';
+    import Log from './log.vue';
+    import { removeSite, buildSite, getLastActivityId } from '../settings.js';
 
     export default {
         inject: ['api'],
 
-        components: { Dialog },
+        components: { Dialog, Log },
 
         props: {
             sites: {
@@ -60,7 +75,8 @@
             return {
                 config: config,
                 lastActivityId: undefined,
-                dialog: undefined
+                dialog: undefined,
+                log: undefined
             }
         },
         
@@ -82,6 +98,58 @@
              */
             siteUpdateAvailable: function(site) {
                 return this.lastActivityId && (parseInt(this.lastActivityId) > parseInt(site[this.config.keys.activity]));
+            },
+
+            /**
+             * Check if the Site is currently being built
+             * @param {Site} site Site to check
+             * @returns {Boolean} true if the site status is Building
+             */
+            siteIsBuilding: function(site) {
+                return site[this.config.keys.status] === this.config.statuses.started;
+            },
+
+            /**
+             * Display the Log dialog for the specified Site
+             * @param {Site} site Site to display log for
+             */
+            displayLog: function(site) {
+                this.log = site;
+            },
+
+            /**
+             * Dismiss the dialog and refresh the Sites after closing the Log Dialog
+             */
+            onLogClose: function() {
+                this.log = undefined;
+                this.$emit('update');
+            },
+
+            /**
+             * Start the Build process for the specified Site
+             * - Flag the site as "Building"
+             * - Call the Build API endpoint
+             * - Refresh the sites when complete
+             */
+            startBuild: function(site) {
+                let vm = this;
+                site[vm.config.keys.status] = vm.config.statuses.started;
+                buildSite(vm.api, site[vm.config.keys.id], function(resp) {
+                    if ( resp && resp.error ) {
+                        vm.dialog = {
+                            title: "Build Error",
+                            message: "There was an error while running the build command for <strong>" + site[vm.config.keys.name] + "</strong>.  View the log for more detailed information.",
+                            action: "Close",
+                            onAction: function() {
+                                vm.dialog = undefined;
+                                vm.$emit('update');
+                            }
+                        }
+                    }
+                    else {
+                        if ( !vm.log ) vm.$emit('update');
+                    }
+                });
             },
 
             /**
@@ -139,6 +207,13 @@
     .site-card-update-none {
         background-color: var(--success);
         color: var(--success-alt);
+    }
+    .site-card-update-building {
+        background-color: var(--blue);
+        color: var(--blue-alt);
+    }
+    .v-progress-circular {
+        float: right;
     }
     .site-card span.id-badge {
         background-color: var(--v-chip-background-color);

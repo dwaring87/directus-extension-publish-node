@@ -34,8 +34,8 @@
         </Message>
 
         <!-- List of Sites -->
-        <Sites v-if="!loading && !setupMessage && sites && sites.length > 0"
-                v-bind:sites="sites" page='settings' v-on:update="displaySites" v-on:loading="loading = true" />
+        <Sites v-if="!loading && !setupMessage && sites && sites.length > 0" page='settings'
+                v-bind:sites="sites" v-on:update="displaySites" v-on:loading="loading = true" />
 
         <!-- Add Site Drawer -->
         <AddSiteDrawer v-bind:show="showAddSiteDrawer" 
