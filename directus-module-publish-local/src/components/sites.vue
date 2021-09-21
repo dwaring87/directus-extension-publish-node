@@ -138,7 +138,7 @@
                     if ( resp && resp.error ) {
                         vm.dialog = {
                             title: "Build Error",
-                            message: "There was an error while running the build command for <strong>" + site[vm.config.keys.name] + "</strong>.  View the log for more detailed information.",
+                            message: "There was an error while running the build command for <strong>" + site[vm.config.keys.name] + "</strong> (" + resp.error + ").  View the log for more detailed information.",
                             action: "Close",
                             onAction: function() {
                                 vm.dialog = undefined;
