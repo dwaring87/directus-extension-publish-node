@@ -88,7 +88,8 @@
                 config: config,
                 lastActivityId: undefined,
                 dialog: undefined,
-                log: undefined
+                log: undefined,
+                updateInterval: undefined
             }
         },
         
@@ -98,6 +99,14 @@
             },
             settings: function() {
                 return this.page === 'settings';
+            },
+            anySiteIsBuilding: function() {
+                for ( let i = 0; i < this.sites.length; i++ ) {
+                    if ( this.sites[i][config.keys.status] === config.statuses.started ) {
+                        return true;
+                    }
+                }
+                return false;
             }
         },
 
@@ -195,6 +204,19 @@
             getLastActivityId(vm.api, function(lastActivityId) {
                 vm.lastActivityId = lastActivityId;
             });
+            if ( !vm.updateInterval ) {
+                vm.updateInterval = setInterval(function() {
+                    if ( vm.anySiteIsBuilding ) {
+                        vm.$emit('update');
+                    }
+                }, 1000);
+            }
+        },
+
+        beforeUnmount: function() {
+            if ( this.updateInterval ) {
+                clearInterval(this.updateInterval);
+            }
         }
     }
 </script>
