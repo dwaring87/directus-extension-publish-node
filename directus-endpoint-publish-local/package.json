@@ -5,7 +5,7 @@
     "main": "src/index.js",
     "scripts": {
       "build": "",
-      "deploy": "ext_path=\"$DIRECTUS_EXTENSIONS_DIR/endpoints/dwaring87-publish-local/\"; echo \"Deploying endpoint to: $ext_path\"; mkdir -p \"$ext_path\"; cp ./src/index.js ../config.js \"$ext_path/\""
+      "deploy": "DOTENV_CONFIG_PATH=../.env node scripts/deploy.js"
     },
     "repository": {
       "type": "git",

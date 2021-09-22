@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "npx directus-extension build",
-    "deploy": "ext_path=\"$DIRECTUS_EXTENSIONS_DIR/modules/dwaring87-publish-local/\"; echo \"Deploying module to: $ext_path\"; mkdir -p \"$ext_path\"; cp ./dist/index.js \"$ext_path/index.js\""
+    "deploy": "DOTENV_CONFIG_PATH=../.env node scripts/deploy.js"
   },
   "repository": {
     "type": "git",

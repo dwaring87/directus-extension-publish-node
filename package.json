@@ -6,6 +6,9 @@
     ],
     "scripts": {
         "build": "npm run build --workspaces",
-        "deploy": "default_dir=$(grep DEFAULT_DIRECTUS_EXTENSIONS_DIR .env | cut -d '=' -f 2) && DIRECTUS_EXTENSIONS_DIR=\"${DIRECTUS_EXTENSIONS_DIR:-$default_dir}\" npm run deploy --workspaces"
+        "deploy": "npm run deploy --workspaces"
+    },
+    "dependencies": {
+        "dotenv": "^10.0.0"
     }
 }

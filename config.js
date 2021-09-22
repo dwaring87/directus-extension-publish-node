@@ -48,5 +48,6 @@ module.exports = {
         "collection":  {
             "_neq": collection_name
         }
-    }
+    },
+    "extension_path_env_var": "DIRECTUS_EXTENSIONS_PATH"
 }
