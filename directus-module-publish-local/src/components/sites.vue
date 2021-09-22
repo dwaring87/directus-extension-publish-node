@@ -18,10 +18,22 @@
             <v-card-subtitle>{{ site[config.keys.url] }}</v-card-subtitle>
             
             <v-card-text>
-                <p v-if="settings"><strong>Path:</strong> <code>{{ site[config.keys.path] }}</code></p>
-                <p v-if="settings"><strong>Build Command:</strong> <code>npm run {{ site[config.keys.command] }}</code></p>
-                <p><strong>Status:</strong> {{ site[config.keys.status] ? site[config.keys.status] : 'Unknown' }}</p>
-                <p><strong>Last Updated:</strong> {{ site[config.keys.timestamp] ? site[config.keys.timestamp] : 'Unknown' }}</p>
+                <p v-if="settings">
+                    <strong>Path:</strong> 
+                    <code>{{ site[config.keys.path] }}</code>
+                </p>
+                <p v-if="settings">
+                    <strong>Build Command:</strong> 
+                    <code>npm run {{ site[config.keys.command] }}</code>
+                </p>
+                <p>
+                    <strong>Status:</strong> 
+                    {{ site[config.keys.status] ? site[config.keys.status] : 'Unknown' }}
+                </p>
+                <p>
+                    <strong>Last Updated:</strong> 
+                    {{ site[config.keys.timestamp] ? new Date(parseInt(site[config.keys.timestamp])).toLocaleString() : 'Unknown' }}
+                </p>
             </v-card-text>
             
             <v-card-actions>
@@ -46,8 +58,8 @@
                 v-bind:close="dialog ? dialog.close : undefined" v-on:close="dialog = undefined" 
                 v-bind:action="dialog ? dialog.action : undefined" v-on:action="function() { dialog ? dialog.onAction() : undefined }" />
 
-        <!-- Log Dialog -->
-        <Log v-bind:site="log" v-on:close="onLogClose" />
+        <!-- Log Drawer -->
+        <LogDrawer v-bind:show="!!log" v-bind:site="log" v-on:close="onLogClose" />
 
     </div>
 </template>
@@ -55,13 +67,13 @@
 <script>
     import config from '../../../config.js';
     import Dialog from './dialog.vue';
-    import Log from './log.vue';
+    import LogDrawer from './logDrawer.vue';
     import { removeSite, buildSite, getLastActivityId } from '../settings.js';
 
     export default {
         inject: ['api'],
 
-        components: { Dialog, Log },
+        components: { Dialog, LogDrawer },
 
         props: {
             sites: {

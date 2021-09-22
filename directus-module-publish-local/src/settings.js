@@ -57,7 +57,6 @@ function getSites(api, callback) {
                 let s = res.data.data[i];
                 let k = "site_" + s.site;
                 let o = so[k] ? so[k] : {};
-                o[config.keys.id] = s.site;
                 o[s.key] = s.value;
                 so[k] = o;
             }
@@ -126,7 +125,7 @@ function saveSite(api, name, path, command, url, callback) {
             {
                 "site": site_id,
                 "key": config.keys.timestamp,
-                "value": new Date().toLocaleString()
+                "value": new Date().getTime()
             },
             {
                 "site": site_id,

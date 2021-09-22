@@ -151,7 +151,7 @@ module.exports = function registerEndpoint(router, { services }) {
             );
             let timestamp_update = await settingsService.updateByQuery(
                 { filter: { site: { "_eq": site[config.keys.id] }, key: { "_eq": config.keys.timestamp } } },
-                { value: new Date().toLocaleString() }
+                { value: new Date().getTime() }
             );
             return status_update && status_update.length === 1 && timestamp_update && timestamp_update.length === 1;
         }
