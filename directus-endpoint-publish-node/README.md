@@ -1,4 +1,4 @@
-# Directus API Endpoint: dwaring87-publish-local
+# Directus API Endpoint: dwaring87-publish-node
 
 The custom API endpoints for initiating and monitoring a build of static site.
 
@@ -6,7 +6,7 @@ The custom API endpoints for initiating and monitoring a build of static site.
 
 ### Start Build
 
-`GET` `/dwaring87-publish-local/build/:site`
+`GET` `/dwaring87-publish-node/build/:site`
 
 - `site`: the ID number of the site stored in the extension's settings (see the module's settings page to get the ID number)
 
@@ -17,7 +17,7 @@ This will run the saved npm build script and return when complete with either an
 
 ### Get Status
 
-`GET` `/dwaring87-publish-local/status/:site`
+`GET` `/dwaring87-publish-node/status/:site`
 
 - `site`: the ID number of the site stored in the extension's settings (see the module's settings page to get the ID number)
 

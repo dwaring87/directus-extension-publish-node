@@ -1,5 +1,5 @@
-const extension_name = "dwaring87-publish-local";
-const collection_name = "dwaring87_publish_local";
+const extension_name = "dwaring87-publish-node";
+const collection_name = "dwaring87_publish_node";
 
 module.exports = {
     "extension": extension_name,

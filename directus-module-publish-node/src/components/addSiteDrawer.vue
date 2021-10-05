@@ -162,6 +162,7 @@
                         vm.path = undefined;
                         vm.command = undefined;
                         vm.url = undefined;
+                        vm.env = {};
                         vm.$emit('close');
                         vm.$emit('done');
                     }

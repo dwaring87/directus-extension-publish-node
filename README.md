@@ -1,4 +1,4 @@
-# Directus Extension: dwaring87-publish-local
+# Directus Extension: dwaring87-publish-node
 
 A Directus v9 Extension (including a frontend app module and a backend API endpoint) for initiating and monitoring a build of a static site using an npm package script on a locally installed source.
 
@@ -12,8 +12,16 @@ This was developed to make it easier for an admin user of the Directus app to st
 
 This repository includes two extensions (packaged as npm workspaces): 
 
-- **directus-module-publish-local:** A frontend app module that the allows the user to manage sites and intitiate builds
-- **directus-endpoint-publish-local:** A backend API endpoint that is used to intiate the build process and retrieve the build logs
+- **directus-module-publish-node:** A frontend app module that the allows the user to manage sites and intitiate builds
+- **directus-endpoint-publish-node:** A backend API endpoint that is used to intiate the build process and retrieve the build logs
+
+### Install
+
+Install the node dependencies:
+
+```
+npm install
+```
 
 ### Build
 
@@ -33,15 +41,15 @@ DIRECTUS_EXTENSIONS_PATH=/directus/extensions npm run deploy
 
 To manually install the extensions into Directus, copy:
 
-- `./config.js` --> `/directus/extensions/endpoints/dwaring87-publish-local/config.js`
-- `./directus-endpoint-publish-local/src/index.js` --> `/directus/extensions/endpoints/dwaring87-publish-local/index.js`
-- `./directus-module-publish-local/dist/index.js` --> `/directus/extensions/modules/dwaring87-publish-local/index.js`
+- `./config.js` --> `/directus/extensions/endpoints/dwaring87-publish-node/config.js`
+- `./directus-endpoint-publish-node/src/index.js` --> `/directus/extensions/endpoints/dwaring87-publish-node/index.js`
+- `./directus-module-publish-node/dist/index.js` --> `/directus/extensions/modules/dwaring87-publish-node/index.js`
 
 ## Usage
 
 ### Setup
 
-To add and configure a new site, go to the module's Settings page and click the add/plus button in the top right corner.  Fill out the form with the site's display name, the path to the site's source code directory, the npm package build script (executed with `npm run`), and the URL used to view the site.
+To add and configure a new site, go to the module's Settings page and click the add/plus button in the top right corner.  Fill out the form with the site's display name, the URL used to view the site, the path to the site's source code directory, and the npm package build script (executed with `npm run`).  If the build requires any environment variables to be set, they can be added here.
 
 ![Add New Site Form](https://user-images.githubusercontent.com/7526014/134501221-b2c88265-1780-4f73-8b9f-7dcc57b2e66e.jpeg)
 

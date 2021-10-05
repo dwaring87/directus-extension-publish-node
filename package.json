@@ -1,8 +1,8 @@
 {
-    "name": "@dwaring87/directus-extension-publish-local",
+    "name": "@dwaring87/directus-extension-publish-node",
     "workspaces": [
-        "./directus-module-publish-local",
-        "./directus-endpoint-publish-local"
+        "./directus-module-publish-node",
+        "./directus-endpoint-publish-node"
     ],
     "scripts": {
         "build": "npm run build --workspaces",
