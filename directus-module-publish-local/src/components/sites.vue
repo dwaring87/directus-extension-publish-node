@@ -26,6 +26,12 @@
                     <strong>Build Command:</strong> 
                     <code>npm run {{ site[config.keys.command] }}</code>
                 </p>
+                <p v-if="settings">
+                    <strong>Environment Variables:</strong>
+                    <ul v-for="(value, key) in site[config.keys.env]" class="envvar-list">
+                        <li :key="key">{{ key }}={{ value }}</li>
+                    </ul>
+                </p>
                 <p>
                     <strong>Status:</strong> 
                     {{ site[config.keys.status] ? site[config.keys.status] : 'Unknown' }}
@@ -265,9 +271,16 @@
         padding: 0.2em;
     }
     .site-card .v-button.danger {
-		--v-button-color: var(--danger-alt);
-		--v-button-background-color: var(--danger);
-		--v-button-color-hover: var(--danger-alt);
-		--v-button-background-color-hover: var(--danger-125);
-	}
+        --v-button-color: var(--danger-alt);
+        --v-button-background-color: var(--danger);
+        --v-button-color-hover: var(--danger-alt);
+        --v-button-background-color-hover: var(--danger-125);
+    }
+    .site-card ul.envvar-list {
+        list-style: none;
+        padding-inline-start: 15px;
+    }
+    .site-card ul.envvar-list li {
+        font-family: monospace;
+    }
 </style>

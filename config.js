@@ -30,6 +30,7 @@ module.exports = {
         "path": "site-path",
         "command": "site-command",
         "url": "site-url",
+        "env": "site-env",
         "status": "build-status",
         "log": "build-log",
         "timestamp": "build-timestamp",

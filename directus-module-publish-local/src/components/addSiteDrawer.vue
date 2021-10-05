@@ -15,10 +15,18 @@
 
                 <div class="input-row">
                     <div class="type-label">
+                        Public URL
+                        <v-icon tooltip="Required" class="required" name="star" sup />
+                    </div>
+                    <v-input v-model="url" placeholder="https://www.example.com"></v-input>
+                </div>
+
+                <div class="input-row">
+                    <div class="type-label">
                         Local Path to Site
                         <v-icon tooltip="Required" class="required" name="star" sup />    
                     </div>
-                    <v-input v-model="path" placeholder="/gridsome"></v-input>
+                    <v-input v-model="path" placeholder="/site"></v-input>
                 </div>
 
                 <div class="input-row">
@@ -30,13 +38,31 @@
                 </div>
 
                 <div class="input-row">
-                    <div class="type-label">
-                        Public URL
-                        <v-icon tooltip="Required" class="required" name="star" sup />
+                    <div class="type-label">Environment Variables</div>
+                    <div class="envvar-input-row">
+                        <div class="envvar-input-key">
+                            <v-input v-model="envVarKey" placeholder="API_URL"></v-input>
+                        </div>
+                        <div class="envvar-input-value">
+                            <v-input v-model="envVarValue" placeholder="https://api.example.com"></v-input>
+                        </div>
+                        <div class="envvar-input-add">
+                            <v-button v-on:click="addEnvVar" icon><v-icon name="done"></v-icon></v-button>
+                        </div>
                     </div>
-                    <v-input v-model="url" placeholder="https://www.example.com"></v-input>
+                    <br />
+                    <template v-for="(value, key) in env" :key="key">
+                        <div class="envvar-display-row">
+                            <div class="envvar-display-value">
+                                <code>{{ key }}={{ value }}</code>
+                            </div>
+                            <div class="envvar-display-remove">
+                                <v-button class="danger" v-on:click="removeEnvVar(key)" x-small icon><v-icon name="clear"></v-icon></v-button>
+                            </div>
+                        </div>
+                    </template>
                 </div>
-                
+
                 <br /><br />
 
                 <div style="max-width: 250px; margin: 0 auto">
@@ -76,11 +102,35 @@
                 command: undefined,
                 url: undefined,
                 saving: false,
-                dialog: undefined
+                dialog: undefined,
+                envVarKey: undefined,
+                envVarValue: undefined,
+                env: {}
             }
         },
 
         methods: {
+
+            /**
+             * Add the entered env var key and value to the env object
+             */
+            addEnvVar: function() {
+                if ( this.envVarKey && this.envVarKey !== "" && this.envVarValue && this.envVarValue !== "" ) {
+                    this.env[this.envVarKey] = this.envVarValue;
+                    this.envVarKey = undefined;
+                    this.envVarValue = undefined;
+                }
+            },
+
+            /**
+             * Remove the specified env var from the env object
+             * @param {string} key the key of the env var to remove
+             */
+            removeEnvVar: function(key) {
+                if ( this.env.hasOwnProperty(key) ) {
+                    delete this.env[key];
+                }
+            },
             
             /**
             * Process user input to create a new Site
@@ -102,7 +152,7 @@
                 }
 
                 vm.saving = true;
-                saveSite(vm.api, vm.name, vm.path, vm.command, vm.url, function(success) {
+                saveSite(vm.api, vm.name, vm.path, vm.command, vm.url, vm.env, function(success) {
                     vm.saving = false;
                     if ( !success ) {
                         vm.displayError("Could not add Site to Settings");
@@ -141,5 +191,24 @@
     }
     div.type-label {
         padding-bottom: 5px;
+    }
+    div.envvar-input-row, div.envvar-display-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+    div.envvar-input-key, div.envvar-input-value, div.envvar-display-value {
+        flex-grow: 1;
+    }
+    code {
+        font-family: monospace;
+    }
+
+    .v-button.danger {
+        --v-button-color: var(--danger-alt);
+        --v-button-background-color: var(--danger);
+        --v-button-color-hover: var(--danger-alt);
+        --v-button-background-color-hover: var(--danger-125);
     }
 </style>

@@ -57,14 +57,15 @@ function getSites(api, callback) {
                 let s = res.data.data[i];
                 let k = "site_" + s.site;
                 let o = so[k] ? so[k] : {};
-                o[s.key] = s.value;
+                o[s.key] = s.key === config.keys.env ? JSON.parse(s.value) : s.value;
                 so[k] = o;
             }
             for (const k in so) {
                 if (so.hasOwnProperty(k)) {
                     sites.push(so[k]);
                 }
-            } 
+            }
+            console.log(sites);
             return callback(sites);
         }
         return callback();
@@ -81,9 +82,10 @@ function getSites(api, callback) {
  * @param {String} path Site Path
  * @param {String} command Site Build Command
  * @param {String} url Site URL
+ * @param {Object} env Build Environment
  * @param {Function} callback Callback function(success)
  */
-function saveSite(api, name, path, command, url, callback) {
+function saveSite(api, name, path, command, url, env, callback) {
     _getNewSiteId(api, function(site_id) {
         if ( !site_id ) return callback(false);
         let properties = [
@@ -111,6 +113,11 @@ function saveSite(api, name, path, command, url, callback) {
                 "site": site_id,
                 "key": config.keys.url,
                 "value": url,
+            },
+            {
+                "site": site_id,
+                "key": config.keys.env,
+                "value": JSON.stringify(env ? env : {})
             },
             {
                 "site": site_id,

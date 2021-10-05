@@ -38,11 +38,30 @@ module.exports = function registerEndpoint(router, { services }) {
             return res.send({error: "Could not update Site status to Building in Settings"});
         }
 
-        // Run Build Command
+        // Set command
         let path = site[config.keys.path];
         let command = site[config.keys.command];
+        let env = site[config.keys.env];
+        let env_string = "";
+        if ( env ) {
+            try {
+                env = JSON.parse(env);
+                for ( const key in env ) {
+                    if ( env.hasOwnProperty(key) ) {
+                        env_string += key + "=" + env[key] + " ";
+                    }
+                }
+            }
+            catch (err) {
+                console.log("ERROR: Could not parse env string into object");
+                console.log(err);
+            }
+        }
+        let cmd = env_string + "npm --no-color run --prefix \"" + path + "\" \"" + command + "\"";
+
+        // Run Build Command
         let logStream = fs.createWriteStream(logFile);
-        var child = exec("npm run --prefix \"" + path + "\" \"" + command + "\"");
+        var child = exec(cmd);
         child.stdout.pipe(logStream);
         child.stderr.pipe(logStream);
         child.on('exit', async function(code) {
