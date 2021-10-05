@@ -65,7 +65,6 @@ function getSites(api, callback) {
                     sites.push(so[k]);
                 }
             }
-            console.log(sites);
             return callback(sites);
         }
         return callback();

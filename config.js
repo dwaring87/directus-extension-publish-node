@@ -50,5 +50,6 @@ module.exports = {
             "_neq": collection_name
         }
     },
+    "allow_concurrent_builds": false,
     "extension_path_env_var": "DIRECTUS_EXTENSIONS_PATH"
 }

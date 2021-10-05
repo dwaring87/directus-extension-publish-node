@@ -49,7 +49,7 @@
                 <v-button v-if="build && site[config.keys.log]" v-on:click="displayLog(site)">
                     <v-icon name="text_snippet"></v-icon>&nbsp;Log
                 </v-button>
-                <v-button v-if="build" v-on:click="startBuild(site)" v-bind:disabled="siteIsBuilding(site)">
+                <v-button v-if="build" v-on:click="startBuild(site)" v-bind:disabled="siteIsBuilding(site) || (!config.allow_concurrent_builds && anySiteIsBuilding)">
                     <v-icon name="build"></v-icon>&nbsp;Build
                 </v-button>
                 <v-button v-if="settings" v-on:click="promptDeleteSite(site)" class="danger">
