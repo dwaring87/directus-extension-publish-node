@@ -44,10 +44,10 @@ module.exports = {
     },
     "activityFilter": {
         "action": {
-            "_neq": "authenticate"
+            "_neq": "login"
         },
-        "collection":  {
-            "_neq": collection_name
+        "collection": {
+            "_nin": [collection_name, "directus_dashboards", "directus_folders", "directus_migrations", "directus_panels", "directus_sessions", "directus_settings", "directus_webhooks"]
         }
     },
     "allow_concurrent_builds": false,

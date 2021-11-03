@@ -191,7 +191,7 @@ module.exports = function registerEndpoint(router, { services }) {
         try {
             let activity_rows = await activityService.readByQuery({ 
                 filter: config.activityFilter, 
-                sort: [{ column: "timestamp", order: "desc" }], 
+                sort: ["-timestamp"],
                 limit: 1 
             });
             if ( !activity_rows || activity_rows.length !== 1 ) {
