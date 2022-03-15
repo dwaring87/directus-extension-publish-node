@@ -11,22 +11,22 @@ module.exports = {
             "note": "Configuration settings for the " + extension_name + " extension",
             "hidden": true
         },
-        "fields": [
-            {
-                "field": "site",
-                "type": "integer"
-            },
-            {
-                "field": "key",
-                "type": "string"
-            },
-            {
-                "field": "value",
-                "type": "string"
-            }
-        ],
         "schema": {}
     },
+    "fields": [
+        {
+            "field": "site",
+            "type": "integer"
+        },
+        {
+            "field": "key",
+            "type": "string"
+        },
+        {
+            "field": "value",
+            "type": "string"
+        }
+    ],
     "keys": {
         "id": "site-id",
         "name": "site-name",
