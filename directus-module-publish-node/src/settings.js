@@ -152,7 +152,7 @@ function removeSite(api, site, callback) {
                 ids.push(res.data.data[i].id)
             }
             api.delete(`/items/${config.collection.collection}`, {data: { keys: ids }}).then(function(res) {
-                return callback(res && res.status && res.status === 200);
+                return callback(res && res.status && res.status === 204);
             }).catch(function(err) {
                 console.log(err);
                 return callback(false);
