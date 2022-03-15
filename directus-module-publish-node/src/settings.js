@@ -22,16 +22,6 @@ function collectionExists(api, callback) {
 function createCollection(api, callback) {
     api.post('/collections', config.collection).then(async function(res) {
         if ( res && res.status && res.status === 200 ) {
-            let requests = [];
-            for ( let i = 0; i < config.fields.length; i++ ) {
-                requests.push(api.post(`/fields/${config.collection.collection}`, config.fields[i]));
-            }
-            const responses = await Promise.all(requests);
-            for ( let i = 0; i < responses.length; i++ ) {
-                if ( responses[i].status !== 200 ) {
-                    return callback(false);
-                }
-            }
             return callback(true);
         }
         else {
